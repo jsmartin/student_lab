@@ -1,5 +1,5 @@
 - name: This installs zabbix
-  hosts: "{{systemgroup}}"
+  hosts: "{{systemgroup}}-group"
   become: yes
   roles:
   - role: dj-wasabi.zabbix-agent

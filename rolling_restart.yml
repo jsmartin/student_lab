@@ -1,0 +1,27 @@
+- name: gather some facts
+  hosts: web
+  gather_facts: yes
+
+- name: perform rolling restart
+  hosts: web
+  become: yes
+  serial: 1
+  
+  pre_tasks:
+  - debug: msg="removed host"
+#  - name: remove host from haproxy
+#    haproxy: 
+#      state: disabled 
+#      host: "{{ inventory_hostname }}"
+    delegate_to: haproxy
+
+  roles:
+  - apache
+
+  post_tasks:
+  #- name: addd host to haproxy
+  - debug: msg="removed host"
+#    haproxy:
+#      state: enabled
+#      host: "{{ inventory_hostname }}"
+    delegate_to: haproxy

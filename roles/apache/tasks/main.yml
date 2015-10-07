@@ -1,0 +1,41 @@
+---
+# tasks file for roles/apache
+#
+- name: test idempotency
+  shell: echo "foo" > /tmp/foo
+  args:
+    creates: /tmp/foo
+
+- name: install epel
+  yum:
+    name: epel-release
+    state: present
+
+- name: install packages
+  yum:
+    name: "{{item}}"
+    state: present
+  with_items:
+  - httpd
+  - python-httplib2
+
+- name: start httpd
+  service:
+    name: httpd
+    state: started
+  tags: service
+
+- name: setup root page
+  copy:
+    content: "{{ apache_message }}"
+    dest: /var/www/html/index.html
+
+- name: verify apache is running
+  uri:
+    url: http://localhost
+    return_content: yes
+    status_code: 200
+  register: result
+  until: '"{{ apache_message }}" in result.content'
+  retries: 10
+  delay: 3

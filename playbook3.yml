@@ -1,0 +1,20 @@
+- name: This installs zabbix
+  hosts: "{{myhosts}}"
+  become: yes
+  roles:
+  - role: dj-wasabi.zabbix-agent
+    tags: common
+
+- name: setup haproxy
+  hosts: haproxy
+  become: yes
+  roles:
+  - role: geerlingguy.haproxy
+    tags: haproxy
+
+- name: This playbook uses a role
+  hosts: web
+  become: yes
+  roles:
+  - apache
+  

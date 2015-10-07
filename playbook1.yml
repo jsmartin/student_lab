@@ -1,0 +1,21 @@
+- name: our first playbook
+  hosts: "{{myhosts}}"
+  become: yes
+  tasks:
+  - name: run a command
+    command: uptime   
+    changed_when: false
+    become: no
+   
+  - name: debug hostname
+    debug:
+      var: inventory_hostname
+
+  - name: run hostname command
+    command: hostname {{ inventory_hostname }}
+    
+  - name: update /etc/hostname
+    copy:
+      content: "{{ inventory_hostname }}"
+      dest: /etc/hostname
+    
